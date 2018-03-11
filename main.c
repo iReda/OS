@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define capacity 1
+#define capacity 3
 
 
 typedef struct node
@@ -13,11 +13,13 @@ node *remove_position(int position, node *head);
 node *insert_beginning(int number, node* head);
 node *insert_position(int data, int position, node *head);
 node *insert_end(int data, node *head);
-void waiting_time(node *head, int running_process, int waiting_time_process[]);
+void waiting_time_fn(node *head, int running_process, int waiting_time_process[]);
+int not_finished(int arr[]);
 
 int main()
 {
     node *head = NULL;
+    /*
     int io_arrival_time[] = {1, 2, 1, 2, 3, 1 ,2, 3, 1, 1};
     int arrival_time[]={0,2,3,7,8,9,10,11,12,13};
     int process_time[]={2,3,5,3,4,6,8,7,9,1};
@@ -31,6 +33,16 @@ int main()
     int turn_around_time[]={0,0,0,0,0,0,0,0,0,0};
     int running_process = 0;
     int busy=0;
+    */
+    int process_time[]={2,3,5};
+    int io_arrival_time[] = {1, 2, 3};
+    int arrival_time[]={0,1,2};
+    int waiting_time[] = {0, 0, 0};
+    int running_time[] = {0, 0, 0};
+    int sys_running_time = 0;
+    int finishing_time[capacity];
+    int finished[capacity];
+    int running_process = 0;
     float awt=0;
     float att=0;
     int first_ready;
@@ -55,7 +67,7 @@ int main()
                 first_ready++;
             }
         //This function increments the waiting time for each process
-        waiting_time(head,running_process, waiting_time);
+        waiting_time_fn(head,running_process, waiting_time);
         if(running_time[running_process] == io_arrival_time[running_process])
         {
             head = insert_end(running_process, head);
@@ -63,10 +75,15 @@ int main()
             running_process = head -> data;
             //continue;
         }
-        
         running_time[running_process] ++;
-
+        if(running_time[running_process] == process_time[running_process])
+        {
+            finished[running_process] = 1;
+        }
         sys_running_time++;
+
+
+
     }
 
 
@@ -83,7 +100,7 @@ int main()
 *
 ******************************************************************************************************************/
 
-void waiting_time(node *head, int running_process, int waiting_time_process[])
+void waiting_time_fn(node *head, int running_process, int waiting_time_process[])
 {
     node* temp;
     temp = head;
@@ -92,6 +109,7 @@ void waiting_time(node *head, int running_process, int waiting_time_process[])
         if(running_process != temp ->data)
         {
             waiting_time_process[temp->data] ++;
+            printf("process no %d waiting time = %d\n", temp->data, waiting_time_process[temp->data]);
             temp = temp->next;
         }
     }
@@ -169,4 +187,14 @@ node *insert_end(int data, node *head)
         printf("added later\n");
     }
     return head;
+}
+
+int not_finished(int arr[])
+{
+    int i;
+    for(i=0;i<capacity;i++)
+    {
+        if(arr[i] == -1) return 1;
+    }
+    return 0;
 }
