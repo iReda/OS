@@ -63,9 +63,10 @@ int main()
             running_process = head -> data;
             //continue;
         }
+        
+        running_time[running_process] ++;
 
-
-
+        sys_running_time++;
     }
 
 
